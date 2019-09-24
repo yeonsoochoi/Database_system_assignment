@@ -126,14 +126,22 @@ list Find(list person, char name[]){        //find the name in the list person
         tmp = tmp->next;
     }
     
-    
+
     
     if(check >1){       //it means there are many options
-        printf("Please collect Who you want to change (enter the name) : ");
+        printf("*Please collect Who you want to change (enter the name) : ");
         scanf("%s",finally_find);
         tmp = person;
-        while(strcmp(finally_find, tmp->name)!=0){
+        check = 0;
+        while(tmp != NULL && strcmp(finally_find, tmp->name)!=0){
+            check++;
             tmp = tmp->next;
+        }
+        
+        if(tmp == NULL){
+            printf("error : %s is not in the list\n",finally_find);
+            printf("program is ended\n");
+            exit(-1);
         }
     }
     
@@ -141,6 +149,7 @@ list Find(list person, char name[]){        //find the name in the list person
     else if(check == 1){
         return tmp2;
     }
+    
     
     return tmp;
     
@@ -178,14 +187,22 @@ list Find_pre(list person, char name[], int d_check){       //using in delete()
         printf("Please collect Who you want to delete (enter the name) : ");
         scanf("%s",finally_find);
         tmp = person;
-        while(strcmp(finally_find, tmp->next->name)!=0){
+        check = 0;
+        while(tmp->next != NULL && strcmp(finally_find, tmp->next->name)!=0){
             tmp = tmp->next;
+            check++;
+        }
+        if(check == 0){
+            tmp -> next = NULL;
         }
     }
     
     else if(check == 1){
            return tmp2;
     }
+    
+    else if(check == 0)
+        tmp->next = NULL;
        
     return tmp;
    
@@ -198,7 +215,7 @@ list Find_pre(list person, char name[], int d_check){       //using in delete()
 void Delete(list person, char name[], int d_check){
     list tmp,p;
     tmp = Find_pre(person, name, d_check);
-    if(tmp->name != NULL){
+    if(tmp -> next != NULL){
         p = tmp->next;
         tmp -> next = p -> next;
         free(p);
@@ -402,4 +419,6 @@ int main() {
     
     return 0;
 }
+
+
 
