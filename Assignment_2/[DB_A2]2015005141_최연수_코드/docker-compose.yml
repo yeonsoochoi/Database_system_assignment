@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    environment:
+      - POSTGRES_DB=dbapp
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    networks:
+      - db_nw
+
+  flaskapp:
+    image: dreamwayjgs/dbcourse
+    volumes:
+      - ./src:/home/dbcourse_projects/src
+    stdin_open: true
+    tty: true 
+    networks:
+      - db_nw
+      - web_nw
+    depends_on:
+      - postgres
+  nginx:
+    image: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+    networks:
+      - web_nw
+    depends_on: 
+      - flaskapp
+networks:
+  db_nw:
+    driver: bridge
+  web_nw:
+    driver: bridge
+volumes:
+  pgdata:   

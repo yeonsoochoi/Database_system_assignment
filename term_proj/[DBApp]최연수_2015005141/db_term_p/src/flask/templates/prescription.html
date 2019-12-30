@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script
+src="http://code.jquery.com/jquery-3.4.1.js"
+integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+crossorigin="anonymous"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c6864bef7a3a31656504169808f6f250"></script>
+
+
+<body>
+    <script>
+        var tmp;
+
+        function input(){
+            var input = document.getElementById("text").value;
+            tmp = input;
+            return tmp;
+        }
+
+        document.getElementById('etc').value = input();
+    
+    </script>
+
+
+
+
+
+<br>
+<input type = "button" value="log-out" style="float: right; border" onclick="location.href = '/'"/>
+
+<form id="prescription" method="POST" action="/store_prescription">
+<table border="1" width ="500" height="600" align = "center" >
+    <tr align ="center">
+	    <td colspan = "4" bgcolor= #dddddd ><b><font size="5">처방전</font></b></td>
+    </tr>
+    <tr align = "center">
+	    <td>발급 연,월,일 및 번호</td>
+	    <td colspan = "3"><input type='text' id='p_time' name='p_time'  value="{{r_date}}" /></td>
+    </tr>
+    <tr align = "center">
+	    <td>의료기관 명</td>
+	    <td colspan = "3"><input type='text' id='hosp_name' name='hosp_name' value="{{hosp_name}}" />
+    </tr>
+    <tr align = "center">
+	    <td>이름</td>
+	    <td colspan = "3"><input type='text' id='name' name='name' value="{{name}}" />
+    </tr>
+    <tr align = "center">
+        <td colspan = "4"  bgcolor= #dddddd >처방</td>
+    <tr>
+    <tr align = "center" >
+        <td>처방 의약품의 명칭</td>
+        <td> 1회 투약량</td>
+        <td> 1일 투여횟수 </td>
+        <td> 총 투약일수</td>
+    </tr>
+    <tr align = "center" >
+        <td><input type="text" name="md1" placeholder="medicine" /></td>
+        <td><input type="text" name="n1" placeholder="num" /></td>
+        <td><input type="text" name="f1" placeholder="num" /> </td>
+        <td><input type="text" name="d1" placeholder="num" /></td>
+    </tr>
+    <tr align = "center" >
+        <td><input type="text" name="md2" placeholder="medicine" /></td>
+        <td><input type="text" name="n2" placeholder="num" /></td>
+        <td><input type="text" name="f2" placeholder="num" /> </td>
+        <td><input type="text" name="d2" placeholder="num" /></td>
+    </tr>
+    <tr align = "center" >
+        <td><input type="text" name="md3" placeholder="medicine" /></td>
+        <td><input type="text" name="n3" placeholder="num" /></td>
+        <td><input type="text" name="f3" placeholder="num" /> </td>
+        <td><input type="text" name="d3" placeholder="num" /></td>
+    </tr>
+    <tr align = "center"  bgcolor= #dddddd>
+        <td colspan = "4">의약품 조제 명세</td>
+    <tr>
+    <tr align = "center">
+        <td>조제기관의 명칭</td>
+	    <td colspan = "3"><input type='text' id='phar_name' name='phar_name' /></td>
+    </tr>
+    <tr align = "center">
+        <td>조제연월일</td>
+	    <td colspan = "3"><input type='text' id='phar_t_name' name='phar_t_name' /></td>
+    </tr>
+    <tr align = "center">
+        <td colspan = "4" bgcolor= #dddddd>처방의 변경,수정,확인,대체 시 그 내용 등</td>
+    <tr>
+    <tr > 
+        <input type = "hidden" name="etc" value = ""/>
+        <input type = "hidden" name="rid" value = "{{rid}}"/>
+        <td colspan = "4"><textarea id = "text" rows = "5" cols = "85"> </textarea></td>
+
+    </tr>
+
+   
+</table>
+
+
+<button type="submit" style="font-size:1em; padding:5px 78px; float : right;">처방하기</button>
+</form>
+
+
+
+
+</body>
+</html>

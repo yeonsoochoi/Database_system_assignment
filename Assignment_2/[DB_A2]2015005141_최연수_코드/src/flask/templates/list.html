@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>
+            Students
+        </title>
+
+    </head>
+    <body>             
+        <h1>
+            <center>
+                등록 명단
+            </center>
+        </h1>
+
+        <input type = "button" value="home" onclick="location.href = '/'"/>
+
+
+
+
+        <table>
+          <thead>
+            <tr>
+              <th>
+                이름
+              </th>
+              <th>
+                전화번호
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for student in students %}
+              <tr>
+                <td>
+                    <div style="text-align:center">
+                        {{ student['name'] }}
+                    </div>
+                </td>
+                <td>
+                  {{ student['number'] }}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+
+    </body>
+</html>

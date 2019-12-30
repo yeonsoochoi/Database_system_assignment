@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Dr.Hyu</title>
+</head>
+
+<script
+src="http://code.jquery.com/jquery-3.4.1.js"
+integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+crossorigin="anonymous"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c6864bef7a3a31656504169808f6f250"></script>
+
+<body>
+	
+	<h1>Dr.Hyu</h1>
+
+	<input type = "button" value="log-out" style="float: right; border" onclick="location.href = '/'"/>
+
+	
+	<span style ="font-weight: bold; font-size: 100%; float: right">
+	'{{name}}'님 환영합니다
+	</span>
+	<br>
+	<p style = "text-align:right"> ■ 최근 방문 병원&nbsp; :&nbsp;&nbsp;&nbsp;<span id="recent" style = "float:right"><c:out value='${recent}'/></span> </p>
+	<p style = "text-align:right"> ■ 자주 가는 병원&nbsp; :&nbsp;&nbsp;&nbsp;<span id="star" style = "float:right"><c:out value='${star}'/></span> </p>
+
+	<input type = "hidden" id="name" value = "{{name}}"/>
+	<input type = "hidden" id="p_num" value = "{{p_num}}"/>
+	<input type = "hidden" id="personid" value = "{{personid}}"/>
+	
+
+
+
+    <div id="map" style="width:1250px;height:400px;"></div>
+
+
+
+	<script>
+		var container = document.getElementById('map');
+		var name = document.getElementById('name').value;
+		var p_num = document.getElementById('p_num').value;
+		var personid = document.getElementById('personid').value;
+		console.log(personid)
+		var d = new Date();
+		var day = d.getDay();
+		var year = d.getFullYear();
+		var month = d.getMonth();
+		var date = d.getDate();
+		var hour = d.getHours();
+		var minute = d.getMinutes();
+
+		console.log(day)
+		console.log(hour)
+		
+		
+
+
+		var markers=[];
+
+		
+		
+		var options = {
+			center: new kakao.maps.LatLng(37.5585146, 127.0331892),
+			level: 4
+		};
+
+		var map = new kakao.maps.Map(container, options);
+
+
+
+		$(document).ready(async () => {
+			marker()
+			marker_c()
+			$("input:radio[name=chk]").click(function(){
+				let tmp = $("input:radio[name=chk]:checked").val()
+				
+				if (tmp == 'store'){
+					hideMarkers()
+					marker_store()
+				}
+				else if (tmp == 'hosp'){
+					hideMarkers()
+					marker()
+					marker_c()
+				}
+			})
+
+			$.ajax({ //최근 간 병원 reservation  테이블에 날짜 추가, order by date desc limit 1 으로 최근항목 불러오자
+				type: "POST",
+				url: "/recently_r",
+				cache: false,
+				data: JSON.stringify({personid}),
+				dataType: "json",
+				contentType: "application/json",
+				
+				success: function(recent){
+					console.log(recent) //여기까지 됨. 여기 값을 html로 어캐보냄?
+					
+					var result = recent[0]['inst_name'];
+					$('#recent').html(result);
+
+					}		
+				})
+
+			$.ajax({ 
+				type: "POST",
+				url: "/star",
+				cache: false,
+				data: JSON.stringify({personid}),
+				dataType: "json",
+				contentType: "application/json",
+				
+				success: function(star){					
+					var temp = star[0]['hosp_name'];
+					$('#star').html(temp);
+
+					}		
+				})
+
+
+		})
+
+
+
+		function hideMarkers() {
+    		setMarkers(null);    
+		}
+		function setMarkers(map) {
+    		for (let i = 0; i < markers.length; i++) {
+        		markers[i].setMap(null);
+   		 	}
+		}
+		function reserve_btn(){
+			alert('예약되었습니다.');
+		}
+
+
+
+		
+		function marker(){
+			$.ajax({
+				type: "POST",
+				url: "/map_json",
+				data: JSON.stringify({day, hour}),
+				dataType: "json",
+				cache: false,
+				dataType: "json",
+				contentType: "application/json",
+				
+				success: function(hosp){
+					var imageSrc = "https://image.flaticon.com/icons/svg/459/459225.svg";
+					//"https://image.flaticon.com/icons/svg/69/69536.svg"  운영안하는 병원 마크
+					
+					for (let row of hosp){
+						var imageSize = new kakao.maps.Size(24, 35); 
+						var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+						var latlng = new kakao.maps.LatLng(row['latitude'], row['longitude']);
+						var placeholder = new kakao.maps.Marker({
+							map: map, // 마커를 표시할 지도
+							position: latlng, // 마커를 표시할 위치
+							title : row['name'], // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+							image : markerImage // 마커 이미지 
+							});
+						markers.push(placeholder)
+						//marker[row].setMap(map);
+					}
+					
+				}
+			})
+
+		}
+
+		function marker_c(){
+			$.ajax({
+				type: "POST",
+				url: "/map_json_c",
+				data: JSON.stringify({day, hour}),
+				dataType: "json",
+				cache: false,
+				dataType: "json",
+				contentType: "application/json",
+				
+				success: function(hosp){
+					var imageSrc = "https://image.flaticon.com/icons/svg/69/69536.svg";
+					
+					for (let row of hosp){
+						var imageSize = new kakao.maps.Size(24, 35); 
+						var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+						var latlng = new kakao.maps.LatLng(row['latitude'], row['longitude']);
+						var placeholder = new kakao.maps.Marker({
+							map: map, // 마커를 표시할 지도
+							position: latlng, // 마커를 표시할 위치
+							title : row['name'], // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+							image : markerImage // 마커 이미지 
+							});
+						markers.push(placeholder)
+						//marker[row].setMap(map);
+					}
+					
+				}
+			})
+
+		}
+
+
+
+
+
+
+		function marker_store(){
+			$.ajax({
+				type: "POST",
+				url: "/map_json_store",
+				cache: false,
+				dataType: "json",
+				contentType: "application/json",
+				
+				success: function(stor){
+
+					var imageSrc = "https://cdn2.iconfinder.com/data/icons/map-locations-flat-pixel-perfect/64/pin-map-location-14-512.png";
+			
+					for (let row of stor){
+						var imageSize = new kakao.maps.Size(24, 35); 
+						var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+						var latlng = new kakao.maps.LatLng(row['latitude'], row['longitude']);
+						
+						var placeholder = new kakao.maps.Marker({
+							map: map, // 마커를 표시할 지도
+							position: latlng, // 마커를 표시할 위치
+							title : row['name'], // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+							image : markerImage // 마커 이미지 
+							});
+						markers.push(placeholder)
+						}
+				}
+			})
+		}
+
+
+
+
+		function institution_search(){
+			let info = $('input[name="chk"]:checked').val();
+			if(info == 'hosp'){
+				$.ajax({
+					type: "POST",
+					url: "/hosp_search",
+					cache: false,
+					data: JSON.stringify({hosp_name:$('#institution').val()}),
+					dataType: "json",
+					contentType: "application/json",
+					success: function(hosp_s){
+
+						$("#hosp-table  tr").remove();
+						
+							let tHeadHtml = ''
+							let tBodyHtml = ''
+							tHeadHtml += `<tr>
+							<th>병원이름</th>
+							<th>주소</th>
+							<th>전문의 (단위:명)</th>
+							<th></th>
+							<th></th>
+							</tr>
+							`
+							for (let hosp_ of hosp_s) {
+								tBodyHtml += `<tr>
+								<td>${hosp_['name']}</td>
+								<td>${hosp_['address']}</td>
+								<td>${hosp_['doctorcnt']}</td>
+								<td>
+									<form id=reservation_h method = "POST"  action ="/to_reservated_h">
+										<input type = "hidden" name="name" value = "${name}"/>
+										<input type = "hidden" name="p_num" value = "${p_num}"/>
+										<input type = "hidden" name="info" value = "${info}"/>
+										<input type = "hidden" name="hosp_name" value = "${hosp_['name']}"/>
+										<input type = "hidden" name="personid" value = "${personid}"/>
+										<input type = "submit" style="font-size:1em; padding:5px 30px;" value="예약"/>
+									</form>
+								</td>
+								<td>
+									<form id=reservation_h method = "POST"  action ="/new_star">
+									<input type = "hidden" name="name" value = "${name}"/>
+									<input type = "hidden" name="p_num" value = "${p_num}"/>
+									<input type = "hidden" name="info" value = "${info}"/>
+									<input type = "hidden" name="hosp_name" value = "${hosp_['name']}"/>
+									<input type = "hidden" name="personid" value = "${personid}"/>
+									<input type = "submit" style="font-size:1em; padding:5px 30px;" value="즐겨찾는병원으로 등록"/>
+									</form>
+								</td>
+								</tr>
+								`
+							}
+							$("#hosp-table thead").append(tHeadHtml)
+							$("#hosp-table tbody").append(tBodyHtml)
+
+						}
+			})
+				console.log(info)
+			}
+			else if(info == 'store'){
+
+				$.ajax({
+					type: "POST",
+					url: "/store_search",
+					cache: false,
+					data: JSON.stringify({phar_name:$('#institution').val()}),
+					dataType: "json",
+					contentType: "application/json",
+					success: function(phar_s){
+
+						$("#hosp-table  tr").remove();
+						let tHeadHtml = ''
+						let tBodyHtml = ''
+						tHeadHtml += `<tr>
+						
+						<th>약국이름</th>
+						<th>주소</th>
+						<th></th>
+						</tr>
+						`
+
+
+						for (let phar_ of phar_s) {
+							if(phar_['prescription'] == 't'){
+								tBodyHtml += `<tr>
+								<td>${phar_['name']}</td>
+								<td>${phar_['address']}</td>
+								<td>
+									<form id=reservation_p method = "POST"  action ="/reservated_p">
+										<input type = "hidden" name="name" value = "${name}"/>
+										<input type = "hidden" name="p_num" value = "${p_num}"/>
+										<input type = "hidden" name="info" value = "${info}"/>
+										<input type = "hidden" name="personid" value = "${personid}"/>
+										<input type = "hidden" name="year" value = "${year}"/>
+										<input type = "hidden" name="month" value = "${month}"/>
+										<input type = "hidden" name="date" value = "${date}"/>
+										<input type = "hidden" name="hour" value = "${hour}"/>
+										<input type = "hidden" name="minute" value = "${minute}"/>
+										<input type = "hidden" name="phar_name" value = "${phar_['name']}"/>
+										<input type = "submit" style="font-size:1em; padding:5px 30px;" value="예약가능"
+										onclick="javascript:reserve_btn()"/>
+									</form>
+								</td>
+								</tr>
+								`
+							}
+							else {
+								tBodyHtml += `<tr>
+								<td>${phar_['name']}</td>
+								<td>${phar_['address']}</td>
+								<td>
+									<form >
+										<input type = "button" style="font-size:1em; padding:5px 30px;" value="예약 불가능"/>
+									</form>
+								</td>
+								</tr>
+								`
+							}
+						}
+						$("#hosp-table thead").append(tHeadHtml)
+						$("#hosp-table tbody").append(tBodyHtml)
+					}
+				})
+			}
+
+			else{
+				$.ajax({
+					type: "POST",
+					url: "/read_subject",
+					cache: false,
+					data: JSON.stringify({subject:$('#institution').val()}),
+					dataType: "json",
+					contentType: "application/json",
+					success: function(subjects){
+
+						$("#hosp-table  tr").remove();
+						
+							let tHeadHtml = ''
+							let tBodyHtml = ''
+							tHeadHtml += `<tr>
+							<th>병원이름</th>
+							<th>진료과목</th>
+							</tr>
+							`
+							for (let subject of subjects) {
+								tBodyHtml += `<tr>
+								<td>${subject['hosp_name']}</td>
+								<td>${subject['subject']}</td>
+								
+								</tr>
+								`
+							}
+							$("#hosp-table thead").append(tHeadHtml)
+							$("#hosp-table tbody").append(tBodyHtml)
+
+					}
+				})
+
+
+
+
+			}
+
+			
+
+
+	}
+
+
+
+	</script>
+<br>
+<form>
+<input type="radio" id = "chk" name="chk" value="hosp" checked>병원
+<input type="radio" id = "chk" name="chk" value="store">상점
+<input type="radio" id = "chk" name="chk" value="subject">진료과목으로 검색
+<br>
+<input type="text" id="institution" name="institution" placeholder="이름" />
+<input type = "button" value="검색" onclick= "institution_search()"/>
+</form>
+<style>
+	table{
+		width: 100%;
+		border-top: 1px solid #444444;
+		border-collapse: collapse;
+	}
+	th, td {
+   		border-bottom: 1px solid #444444;
+		padding: 10px;
+  	}
+	
+	tbody tr:nth-child(2n) {
+    	background-color: #eeeeee;
+  	}
+  	tbody tr:nth-child(2n+1) {
+    	background-color: #dddddd;
+	}
+</style>
+<div>
+	<table id="hosp-table" style="text-align: center;">
+		<thead>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+
+</div>
+</body>
+</html>

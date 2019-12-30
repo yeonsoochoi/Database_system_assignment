@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>학생 명단</title>
+    </head>
+
+
+
+        <head>
+            <h1>
+                <center>
+                    학생 명단
+                </center>
+            </h1>
+
+        </head>
+        '수정' 또는 '삭제'를 원하시면, 내용을 입력 후 버튼을 눌러주세요.<br>
+        새로운 등록을 원하실 경우, 내용을 입력 후 등록 버튼을 눌러주세요.
+        <input type = "button" value="home" style="border" onclick="location.href = '/'"/>
+
+
+        <form id="student-register" method="POST" action="/insert_new">
+            <input type="text" name="name" placeholder="Your Name" />
+            <input type="number" name="number" placeholder="Your Number" />
+            <button type="submit" >학생 등록</button>
+        </form>
+
+         <form id="student-update" method="POST" action="/update_new">
+            <input type="text" name="name" placeholder="Your Name"/>
+            <input type="number" name="number" placeholder="Your Number"/>
+            <button type="submit">수정</button>
+        </form>
+
+
+
+        <form id="student-delete" method="POST" action="/delete_new">
+            <input type="text" name="name" placeholder="Your Name" />
+            <button type="submit" >삭제</button>
+        </form>
+        </br>
+        '{{number}}'개의 일치항목이 있습니다.
+        </br>
+        </br>
+
+         <table>
+             <thead>
+
+               <tr>
+                    <th>
+                        이름
+                    </th>
+                    <th>
+                        전화번호
+                    </th>
+                </tr>
+             </thead>
+             <tbody>
+
+                {% for student in students %}
+
+                <tr>
+                    <td>
+
+                        <div style="text-align:center">
+                            {{ student['name'] }}
+                        </div>
+
+                    </td>
+                    <td>
+                        {{ student['number'] }}
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+             </tbody>
+            </table>
+
+    </body>
+</html>

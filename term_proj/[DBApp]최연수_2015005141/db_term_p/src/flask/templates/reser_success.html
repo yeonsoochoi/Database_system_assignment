@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    예약이 완료되었습니다.
+        <form id=reservation_h method = "POST"  action ="/to_map">
+            <input type = "hidden" name="name" value = "{{name}}"/>
+            <input type = "hidden" name="info" value = "{{info}}"/>
+            <input type = "hidden" name="p_num" value = "{{p_num}}"/>
+            <input type = "hidden" name="personid" value = "{{personid}}"/>
+            <input type = "submit" style="font-size:1em; padding:5px 30px;" value="확인"/>
+        </form>
+
+
+
+</body>
+</html>

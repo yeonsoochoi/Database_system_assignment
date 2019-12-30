@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>
+        Students
+    </title>
+    <style>
+        table {
+            width: 30%;
+            border: 1px solid #444444;
+            border-collapse: collapse;
+        }
+        th,
+        td {
+            border: 1px solid #444444;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script>
+        function reloadStudent() {
+            $.ajax({
+                url: "/students",
+                cache: false
+            }).done(data => {
+                students = JSON.parse(data)
+                console.log(typeof (students), students)
+                let tBodyHtml = ''
+                for (let student of students) {
+                    tBodyHtml += `<tr>
+                        <td>${student['name']}</td>
+                        <td>${student['number']}</td>
+                        </tr>
+                        `
+                }
+                $("#student-table tbody").append(tBodyHtml)
+            })
+        }
+        $(document).ready(async () => {
+            $("#title-changer").click(reloadStudent)
+            $("#student-register").submit((e) => {
+                e.preventDefault()
+                let formData = {
+                    "name": e.target.name.value,
+                    "number": e.target.number.value
+                }
+                console.log(formData)
+                $.ajax({
+                    type: "POST",
+                    url: "/register-json",
+                    cache: false,
+                    data: JSON.stringify(formData),
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: res => {
+                        console.log(res)
+                        reloadStudent()
+                    }
+                })
+                // send Form data
+                // let formData = new FormData($("form")[0])
+                // $.ajax({
+                //     type: "POST",
+                //     url: "/register",
+                //     cache: false,
+                //     processData: false,
+                //     contentType: false,
+                //     data: formData,
+                //     success: res => {
+                //         console.log(res)
+                //     }
+                // })
+            })
+        })
+    </script>
+
+
+</head>
+
+
+<body>
+    <br />
+    <h1>학생 검색</h1>
+
+    <form id="student--register" method="POST" action="/register_search">
+        <input type="text" name="name" placeholder="Your Name" />
+        <button type="submit">검색</button>
+    </form>
+
+
+    <h1>학생 명단</h1>
+
+    <button id="title-changer">학생 갱신</button>
+
+    <input type = "button" value="reset" style="border" onclick="location.href = '/reset'"/>
+    <div>
+        <table id="student-table">
+            <thead>
+                <tr>
+                    <th>
+                        이름
+                    </th>
+                    <th>
+                        전화번호
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

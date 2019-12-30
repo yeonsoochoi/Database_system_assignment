@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<br>
+<h1>회원가입 <input type = "button" value="home" style="border" onclick="location.href = '/'"/> 
+</h1>
+
+    <form id="student--register" method="POST" action="/register">
+
+        <input type="checkbox" name="chk_info1" value="hosp" checked>병원
+        <input type="checkbox" name="chk_info2" value="patient">환자
+        <input type="checkbox" name="chk_info3" value="sto">상점
+        <br>
+        ID
+        <br>
+        <input type="text" name="local" placeholder="e-mail" />@
+        <input type="text" name="domain" placeholder="직접입력" />
+        <br>
+        &emsp;&emsp;비 밀 번 호 &emsp;-&emsp;&emsp;
+        <input type="password" name="pwd" placeholder="password" />
+        <br>
+        &emsp;&emsp;이&emsp;&emsp;&nbsp&nbsp&nbsp름 &emsp;-&emsp;&emsp;
+        <input type="text" name="name" placeholder="이름" />
+        <br>
+        &emsp;&emsp;전 화 번 호 &emsp;-&emsp;&emsp;
+        <input type="text" name="p_num" placeholder="전화번호" />
+        <br>
+        &emsp;&emsp;위&emsp;&emsp;&nbsp&nbsp&nbsp치 &emsp;-&emsp;&emsp;
+        <input type='text' id='lat' name='lat' value="37.5585146" />
+        <input type='text' id='lng' name='lng' value="127.0331892" />
+        <br>
+        <button type="submit" style="font-size:1em; padding:5px 128px;">회원가입</button>
+    </form>
+
+
+    </body>
+</html>

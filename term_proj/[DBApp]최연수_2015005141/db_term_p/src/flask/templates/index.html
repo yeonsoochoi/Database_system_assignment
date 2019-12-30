@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>
+        Dr.Hyu
+    </title>
+
+</head>
+
+
+<body>
+    <br />
+    <h1>Dr.Hyu</h1>
+
+
+    <form id="register" method="POST" action="/register_search">
+
+        <input type="radio" name="chk_info" value="hosp" checked>병원
+        <input type="radio" name="chk_info" value="patient">환자
+        <input type="radio" name="chk_info" value="sto">상점
+        <br>
+        <input type="text" name="local" placeholder="e-mail" />@
+        <input type="text" name="domain" placeholder="직접입력" />
+        <br>
+        <input type="password" name="pwd" placeholder="password" />
+        <br>
+        <button type="submit" style="font-size:1em; padding:5px 138px;">login</button>
+    </form>
+
+    <form id="to-register" action="/to_insert">
+    <button type="submit" style="font-size:1em; padding:5px 78px;">아직 회원이 아니신가요?</button>
+    </form>
+
+
+
+    <div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>hospital</title>
+</head>
+
+<script
+src="http://code.jquery.com/jquery-3.4.1.js"
+integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+crossorigin="anonymous"></script>
+
+
+
+<body>
+<br>
+<h1>예약현황</h1>
+<input type = "button" value="log-out" style="float: right; border" onclick="location.href = '/'"/>
+<div>
+    <table id="reservation" style="text-align:center;">
+        <thead>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    
+</div>
+<input type = "hidden" id="phar_name" value = "{{phar_name}}"/>
+<br>
+<h1>처방 가능/불가능 선택</h1>
+<form id="subject" method="POST" action="/change_pres">
+    <input type="radio" name="chk_info" value="t" checked>가능
+    <input type="radio" name="chk_info" value="f">불가능
+    <input type="hidden" id="phar_name" name ="phar_name" value = "{{phar_name}}"/>
+    <button type="submit" style="font-size:1em; padding:5px 138px;" onclick="javascript:reserve_btn()">변경하기</button>
+</form>
+
+<br>
+
+
+
+
+<script>
+    
+    function reserve_btn(){
+			alert('변경되었습니다.');
+	}
+
+
+    var phar_name = document.getElementById('phar_name').value;
+    
+    $(document).ready(async () => {
+        $.ajax({
+            type: "POST",
+            url: "/reservation_status_phar",
+            cache: false,
+            data: JSON.stringify({phar_name}),
+            dataType: "json",
+            contentType: "application/json",
+             
+            success: function(status){
+                $("#reservation  tr").remove();
+                let tHeadHtml = ''
+                let tBodyHtml = ''
+                tHeadHtml += `<tr>
+                <th>약국이름</th>
+                <th>예약자</th>
+                <th>전화번호</th>
+                <th>예약날짜</th>
+                <th>예약시간</th>
+                <th></th>
+                </tr>
+                `
+                console.log(status)
+                for (let row of status) {
+                    if (row['prescription'] == 'f'){
+                        tBodyHtml += `<tr>
+                        <td>${row['inst_name']}</td>
+                        <td>${row['name']}</td>
+                        <td>${row['p_num']}</td>
+                        <td>${row['r_day']}</td>
+                        <td>${row['r_hour']}:${row['r_minute']}</td>
+
+
+                        <td>
+                            <form id=reservation_h method = "POST"  action ="/to_prescription">
+                                <input type = "hidden" name="phar_name" value = "${phar_name}"/>
+                                <input type = "hidden" name="name" value = "${name}"/>
+                                <input type = "hidden" name="rid" id="pid" value = "${row['pid']}"/>
+                                <input type = "hidden" name="r_day" id="r_day" value = "${row['r_day']}"/>
+                                <input type = "hidden" name="r_hour" id="r_hour" value = "${row['r_hour']}"/>
+                                <input type = "hidden" name="r_minute" id="r_minute" value = "${row['r_minute']}"/>
+
+                                <input type = "submit" style="font-size:1em; padding:5px 30px;" value="처방하기"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form id=delete_reservation  method = "POST"  action ="/delete_reser">
+                                <input type = "hidden" name="phar_name" value = "${phar_name}"/>
+                                <input type = "hidden" name="name" value = "${name}"/>
+                                <input type = "hidden" name="rid" id="pid" value = "${row['pid']}"/>
+                                <input type = "submit" style="font-size:1em; padding:5px 30px;" value="삭제"/>
+                            </form>
+                        </td>
+                    </tr>
+                    `
+                    }
+                    else{
+                        tBodyHtml += `<tr>
+                        <td>${row['inst_name']}</td>
+                        <td>${row['name']}</td>
+                        <td>${row['p_num']}</td>
+                        <td>${row['r_day']}</td>
+                        <td>${row['r_hour']}:${row['r_minute']}</td>
+ 
+                        <td>
+                            <form>
+                                <input type = "hidden" name="hosp_name" value = "${hosp_name}"/>
+                                <input type = "hidden" name="name" value = "${name}"/>
+                                <input type = "hidden" name="rid" id="pid" value = "${row['pid']}"/>
+                                <input type = "button" style="font-size:1em; padding:5px 30px;" value="처방완료"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form id=delete_reservation  method = "POST"  action ="/delete_reser">
+                                <input type = "hidden" name="hosp_name" value = "${hosp_name}"/>
+                                <input type = "hidden" name="name" value = "${name}"/>
+                                <input type = "hidden" name="rid" id="pid" value = "${row['pid']}"/>
+                                <input type = "submit" style="font-size:1em; padding:5px 30px;" value="삭제"/>
+                            </form>
+                        </td>
+                    </tr>
+                    `
+
+
+                    }
+
+                }
+                $("#reservation").append(tHeadHtml)
+                $("#reservation").append(tBodyHtml)
+    
+            }
+        })
+
+ 
+    
+    })
+
+
+
+    $(document).ready(async () => {
+        
+    
+    
+    })
+
+    function deleteline(obj){
+        var tr = $(obj).parent().parent();
+        tr.remove();
+    }
+    
+</script>
+
+
+   
+
+</body>
+</html>

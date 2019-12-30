@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>
+        Dr.Hyu
+    </title>
+
+</head>
+
+
+<body>
+    <br />
+    <h1>Dr.Hyu</h1>
+    '약국 정보'를 선택해 주세요.
+    <input type = "button" value="home" style="float:" onclick="location.href = '/'"/>
+    <br>
+
+
+    <form id="register" method="POST" action="/to_phar">
+      
+        <input type = "hidden" name="name" value = "{{name}}"/>
+        <input type = "hidden" name="p_num" value = "{{p_num}}"/>
+
+        <select name = phar_name>
+            {% for phar in phars %}
+                <option value= {{ phar['name'] }}>{{phar['name']}} </option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <button type="submit" style="font-size:1em; padding:5px 138px;">login</button>
+    </form>
+
+
+    <div>
+
+    </div>
+</body>
+
+</html>

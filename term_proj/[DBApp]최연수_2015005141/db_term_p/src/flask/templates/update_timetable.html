@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+	<input type = "button" value="log-out" style="float: right; border" onclick="location.href = '/'"/>
+
+    <form id=time_update method = "POST"  action ="/time_update">
+        <input type = "hidden" name="hosp_name" value = "{{hosp_name}}"/>
+        <input type = "hidden" name="name" value = "{{name}}"/>
+        <table border="1" width ="500" height="600" align = "center" >
+        <tr align ="center">
+            <td></td>
+            <td bgcolor= #dddddd ><b><font size="5">open</font></b></td>
+            <td bgcolor= #dddddd ><b><font size="5">close</font></b></td>
+
+        </tr>
+        <tr align = "center">
+            <td>월</td>
+            <td><select name = "mon_s">
+                    {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                    {% endfor %}
+            </select></td>
+            <td><select name = "mon_e">
+                        {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                        {% endfor %}
+            </select></td>
+        </tr>
+        <tr align = "center">
+            <td>화</td>
+            <td><select name = "tue_s">
+                    {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                    {% endfor %}
+                </select></td>
+            <td><select name = "tue_e">
+                        {% for i in range(24) %}
+                            <option value= {{ i }} >{{ i }} </option>
+                        {% endfor %}
+            </select></td>
+        </tr>
+        <tr align = "center">
+            <td>수</td>
+            <td><select name = "wed_s">
+                    {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                    {% endfor %}
+                </select></td>
+            <td><select name = "wed_e">
+                        {% for i in range(24) %}
+                            <option value= {{ i }} >{{ i }} </option>
+                        {% endfor %}
+            </select></td>
+        </tr>
+        <tr align = "center">
+            <td>목</td>
+            <td><select name = "thu_s">
+                    {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                    {% endfor %}
+                </select></td>
+            <td><select name = "thu_e">
+                        {% for i in range(24) %}
+                            <option value= {{ i }} >{{ i }} </option>
+                        {% endfor %}
+            </select></td>
+        </tr>
+        <tr align = "center">
+            <td>금</td>
+            <td><select name = "fri_s">
+                    {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                    {% endfor %}
+                </select></td>
+            <td><select name = "fri_e">
+                        {% for i in range(24) %}
+                            <option value= {{ i }} >{{ i }} </option>
+                        {% endfor %}
+            </select></td>
+        </tr>
+        <tr align = "center">
+            <td>토</td>
+            <td><select name = "sat_s">
+                    {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                    {% endfor %}
+                </select></td>
+            <td><select name = "sat_e">
+                        {% for i in range(24) %}
+                            <option value= {{ i }} >{{ i }} </option>
+                        {% endfor %}
+            </select></td>
+        </tr>
+        <tr align = "center">
+            <td>일</td>
+            <td><select name = "sun_s">
+                    {% for i in range(24) %}
+                        <option value= {{ i }} >{{ i }} </option>
+                    {% endfor %}
+                </select></td>
+            <td><select name = "sun_e">
+                        {% for i in range(24) %}
+                            <option value= {{ i }} >{{ i }} </option>
+                        {% endfor %}
+            </select></td>
+        </tr>
+                    
+        
+    </table>
+    
+    
+    <button type="submit" style="font-size:1em; padding:5px 78px; float : right;">변경하기</button>
+    </form>
+
+
+
+</body>
+</html>
